@@ -185,8 +185,8 @@
 
   const BUBBLE_MS = 10000;
   const MIN_GAP_MS = 3500;
-  const IDLE_MIN_MS = 20 * 1000;
-  const IDLE_MAX_MS = 45 * 1000;
+  const IDLE_MIN_MS = 15 * 1000;
+  const IDLE_MAX_MS = 15 * 1000;
   const STATE_CHANCE = 0.6;
 
   const bubble = document.createElement("div");
