@@ -183,10 +183,10 @@
     "我把你的 learning rate 改成 114514 了",
   ];
 
-  const BUBBLE_MS = 4200;
+  const BUBBLE_MS = 10000;
   const MIN_GAP_MS = 3500;
-  const IDLE_MIN_MS = 70 * 1000;
-  const IDLE_MAX_MS = 180 * 1000;
+  const IDLE_MIN_MS = 20 * 1000;
+  const IDLE_MAX_MS = 45 * 1000;
   const STATE_CHANCE = 0.6;
 
   const bubble = document.createElement("div");
