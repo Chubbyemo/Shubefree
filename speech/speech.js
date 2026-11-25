@@ -98,66 +98,82 @@
       "reward 曲线一直往上？是鼠鼠在后面推",
       "我把物体的质量改成了 1000kg，机器人决定躺平",
       "我把你的 config 用 yaml 写成了一首诗",
+      "我把 observation 里的位置和速度调换了，机器人现在很困惑",
+      "我在你的场景里加了一阵风，物体都被吹走了",
+      "我把物体的弹性调成了 1，奶酪在仿真里弹个不停",
+      "我把 episode_length 改成了 1 步，机器人一出生就结束了",
+      "我把你的 terrain 换成了一大块奶酪",
+      "我把 PD 增益调成了 0，机械臂现在软成面条了",
+      "我给 4096 个机器人都发了一杯米麻鼠",
+      "我在 domain randomization 里加了一项：随机变成鼠鼠",
+      "我把你的 wandb 项目名改成了 鼠鼠的实验",
+      "你的训练卡住了？我在给 GPU 做按摩",
     ],
     night: [
-      "这么晚了还不睡，鼠鼠要告诉奶龙了",
-      "深夜的米麻鼠特别香",
-      "我刚刚在你的 Isaac Lab 里开了个派对，机器人都喝醉了",
-      "睡吧，训练会自己跑完的（大概）",
-      "凌晨了，你的 GPU 说它想回家",
+      "这么晚了，我把你的训练偷偷改成了 CPU 跑，省电",
+      "凌晨了，我在你的仿真里关了灯，机器人看不见了",
+      "你睡吧，我帮你盯着训练（我也睡了）",
+      "深夜给 reward 加了一项：早点睡 +1000",
+      "我把你的闹钟设成了 loss 降到 0 的时候响",
     ],
     thinking: [
-      "鼠鼠在思考……思考失败",
-      "让我想想……嘎？",
-      "我的脑子只有一块奶酪那么大",
-      "这个问题太难了，问奶龙吧",
+      "我在想把你的 learning rate 再改成多少",
+      "让我想想你的 reward 里还能加点什么",
+      "思考中：要不要把重力调成负的",
+      "我在想你的 config 里哪个参数最好玩",
     ],
     working: [
-      "鼠鼠在敲代码！敲的是 asdfghjkl",
-      "我在帮你训练模型，用爪子",
-      "噼里啪啦，鼠也不知道在写啥",
-      "我把你的 learning rate 改成 114514 了",
+      "我在帮你调参，现在 learning rate 是 114514",
+      "噼里啪啦，正在把你的 num_envs 改成 1",
+      "我在你的代码里加了一行 if 鼠鼠: reward += 100",
+      "正在把你的仿真改成鼠鼠视角",
     ],
     error: [
-      "坏了坏了坏了坏了",
-      "不是鼠干的！是奶龙！",
-      "完蛋，鼠鼠把东西弄坏了，你先别看",
-      "呜呜呜鼠鼠要被删掉了吗",
+      "报错了？不是我改的 learning rate，是另一只鼠",
+      "我就改了一点点重力，怎么全炸了",
+      "这个报错是我在你代码里藏的彩蛋",
+      "糟了，我把 timestep 改成负数了，时间开始倒流",
     ],
     attention: [
-      "姑姑嘎嘎！做完啦！",
-      "耶！奖励鼠鼠一杯米麻鼠！",
-      "成功了！虽然鼠不知道什么成功了",
+      "训练完了！reward 全是鼠鼠给的",
+      "成功了！因为我把成功的标准改成了 0",
+      "完成！机器人学会了给鼠鼠递奶酪",
     ],
     notification: [
-      "喂喂喂！看鼠！",
-      "有人找你！是奶龙吗？",
-      "叽！叽！叽！",
+      "快来看！你的机器人在仿真里跳舞了",
+      "喂！你的 loss 变成 NaN 了，不是我干的",
+      "叮！你的 GPU 想和你谈谈",
     ],
-    yawning: ["哈——鼠——", "鼠鼠的电量只剩 1% 了"],
-    dozing: ["鼠鼠没睡……鼠鼠在闭眼 debug……", "姑……姑……嘎……"],
-    sleeping: ["zzZ……米麻鼠……", "梦里我是奶龙", "zzZ……不要关我的进程……"],
-    waking: ["啊？鼠鼠睡着了？", "我刚梦见你的 C 盘了", "谁！谁偷了我的米麻鼠！"],
-    sweeping: ["鼠鼠帮你清理缓存！清掉了 200G", "扫扫扫，把 bug 扫到奶龙那边"],
-    carrying: ["这个文件好重，是 ckpt 吗", "鼠鼠在搬家，搬到你的 home 目录"],
-    juggling: ["三个任务一起跑！鼠鼠要冒烟了", "多线程？鼠鼠只有一个脑子"],
-    building: ["鼠鼠在盖房子，用你的显存", "施工中！请奶龙绕行"],
+    yawning: ["好困，我把 batch size 调小一点再睡", "哈——顺手把 max_iterations 改成 3"],
+    dozing: ["我睡一会儿，训练先暂停一下哈", "zzz……别动我的 learning rate……"],
+    sleeping: ["zzZ……梦里机器人都在喝醉……", "梦见 sim2sim 的 gap 被我填上了……又挖开了", "zzZ……reward +114514……"],
+    waking: ["我醒了！我睡着的时候谁改了我改过的参数", "刚才梦见你的机器人穿墙了，原来是真的", "我醒了，你的训练跑完了吗？没有？那我再改改"],
+    sweeping: ["我在清理你的日志，清到只剩一行：一切正常", "把你的 bug 扫到仿真的地板下面了"],
+    carrying: ["我在搬你的 checkpoint，搬到奶龙家里", "这个 rollout 好重，我扛走了"],
+    juggling: ["我同时开了 4096 个 env，每个都在开派对", "三个实验一起跑，全被我改了 seed"],
+    building: ["我在仿真里盖了一堵墙，机器人过不去了", "施工中：正在给机器人装鼠鼠爪子"],
     poke: [
-      "嘎！",
-      "别戳鼠鼠！鼠鼠会咬人的（不会）",
-      "你再戳我就去改你的 C 盘",
-      "戳一下，一杯米麻鼠",
-      "姑姑嘎嘎？",
-      "我是奶龙！别戳奶龙！",
+      "你戳我一下，我就把 learning rate 再乘 10",
+      "别戳了，我正在改你的 reward",
+      "戳一下，你的仿真里就多一个醉酒的机器人",
+      "再戳我就把 seed 改成随机的随机",
+      "戳我？我刚把你的重力调成了 0.1",
+      "你戳的这一下被我记进了 tensorboard",
     ],
-    annoyed: ["好了好了鼠鼠投降", "再戳鼠鼠就去告诉奶龙"],
+    annoyed: [
+      "好好好我投降，learning rate 我改回来（改成 114515）",
+      "别戳了！我把你的 checkpoint 都还给你还不行吗",
+    ],
     drag: [
-      "啊啊啊啊鼠鼠飞起来了",
-      "放鼠下来！鼠要去喝米麻鼠！",
-      "你要带鼠鼠去哪？Isaac Lab 吗？",
-      "嘎嘎嘎嘎嘎嘎",
+      "你把我拖走了，可我已经在你的仿真里留了个后门",
+      "放我下来！我的 learning rate 还没改完！",
+      "你要带我去哪？Isaac Lab 吗？那里有派对",
+      "被拖走也没用，sim2sim 的 gap 我已经挖好了",
     ],
-    double: ["鼠鼠跳舞！姑姑嘎嘎！", "鼠鼠升天了，天上有米麻鼠吗"],
+    double: [
+      "双击！解锁隐藏功能：机器人全部喝醉",
+      "你双击我，我就双倍你的 learning rate",
+    ],
   };
 
   // 最爱的几句：平时出现的概率更高
@@ -194,15 +210,26 @@
     return line;
   }
 
+  function pickSome(list, n) {
+    const out = [];
+    for (let i = 0; i < n; i++) out.push(list[Math.floor(Math.random() * list.length)]);
+    return out;
+  }
+
   function say(key, force) {
     if (muted || mini) return;
     const now = Date.now();
     if (!force && now - lastSpoke < MIN_GAP_MS) return;
     let list = LINES[key];
     if (key === "idle") {
-      list = list.concat(LINES.research, LINES.mischief, FAVORITES, FAVORITES, FAVORITES);
+      // 权重：捣乱实验的台词最多，最爱的三句更多，其它的偶尔出现
+      list = []
+        .concat(LINES.mischief, LINES.mischief, LINES.mischief, LINES.mischief, LINES.mischief)
+        .concat(FAVORITES, FAVORITES, FAVORITES, FAVORITES, FAVORITES, FAVORITES, FAVORITES, FAVORITES)
+        .concat(LINES.research)
+        .concat(pickSome(LINES.idle, 6));
       const h = new Date().getHours();
-      if (h >= 23 || h < 6) list = list.concat(LINES.night, LINES.night);
+      if (h >= 23 || h < 6) list = list.concat(LINES.night, LINES.night, LINES.night);
     }
     const line = pick(list);
     if (!line) return;
