@@ -27,8 +27,8 @@ function clip(s, n) {
 
 module.exports = function startClaudeBridge({ updateSession, sendToRenderer, log, tricks }) {
   const server = http.createServer((req, res) => {
-    // 本机手动触发小把戏：curl -X POST 127.0.0.1:23333/trick/heist 或 /trick/roll
-    const m = req.method === "POST" && /^\/trick\/(heist|roll)$/.exec(req.url || "");
+    // 本机手动触发小把戏：curl -X POST 127.0.0.1:23333/trick/heist 或 /trick/crab
+    const m = req.method === "POST" && /^\/trick\/(heist|crab)$/.exec(req.url || "");
     if (m) {
       const t = tricks && tricks();
       const ok = t && t[m[1]]();

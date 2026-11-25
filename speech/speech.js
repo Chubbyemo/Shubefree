@@ -193,19 +193,19 @@
     "我把你的 learning rate 改成 114514 了",
   ];
 
-  // 小把戏：偷奶酪、打滚
+  // 小把戏：偷奶酪、横着走
   LINES.heist = [
     "嘘……我去去就回",
     "这块奶酪现在归鼠鼠了",
     "我什么都没拿，你看错了",
     "偷奶酪的事，你就当没看见",
   ];
-  LINES.roll = [
-    "咕噜咕噜咕噜～",
-    "让一让让一让！刹不住了！",
-    "我在测试新的 locomotion policy",
-    "滚动式前进，reward 拉满",
-    "这就是 sim2sim 的 gap 吗，我滚过去了",
+  LINES.crab = [
+    "横着走，我是螃蟹鼠",
+    "让一让让一让，螃蟹过马路",
+    "我在测试新的 locomotion policy，只会横着走",
+    "reward 里没写要正着走，所以我横着走",
+    "这就是 sim2sim 的 gap 吗，步态全歪了",
   ];
 
   const BUBBLE_MS = 10000;
@@ -299,7 +299,7 @@
     const s = String(state || "");
     const f = String(svg || "");
     if (/heist/.test(f)) return "heist";
-    if (/roll/.test(f)) return "roll";
+    if (/crab/.test(f)) return "crab";
     if (s === "idle") return null;
     if (LINES[s]) return s;
     if (/build/.test(s + f)) return "building";
@@ -319,10 +319,10 @@
   api.onStateChange((state, svg) => {
     const prev = currentState;
     currentState = state;
-    if (state === prev && !/heist|roll/.test(String(svg || ""))) return;
+    if (state === prev && !/heist|crab/.test(String(svg || ""))) return;
     const key = keyForState(state, svg);
     if (!key) return;
-    const sure = key === "waking" || key === "error" || key === "notification" || key === "heist" || key === "roll";
+    const sure = key === "waking" || key === "error" || key === "notification" || key === "heist" || key === "crab";
     if (sure || Math.random() < STATE_CHANCE) say(key);
   });
 

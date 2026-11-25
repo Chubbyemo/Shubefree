@@ -1,9 +1,9 @@
-// tricks.js — little shows the mouse puts on by itself: cheese heist, rolling
-// across the screen. Plays only while the pet is idle and nothing is going on.
+// tricks.js — little shows the mouse puts on by itself: cheese heist, crab-walking
+// sideways across the screen. Plays only while the pet is idle and nothing is going on.
 const HEIST_SVG = "mouse-trick-heist.svg";
 const HEIST_MS = 13300;
-const ROLL_SVG = { 1: "mouse-trick-roll-right.svg", [-1]: "mouse-trick-roll-left.svg" };
-const ROLL_SPEED = 300;        // DIP per second, matches one turn per second
+const CRAB_SVG = "mouse-trick-crab.svg";
+const CRAB_SPEED = 160;        // DIP per second, a brisk sideways scuttle
 const MIN_GAP_MS = 3 * 60 * 1000;
 const MAX_GAP_MS = 7 * 60 * 1000;
 
@@ -36,7 +36,7 @@ module.exports = function createTricks(ctx) {
     return true;
   }
 
-  function roll() {
+  function crab() {
     if (!canPlay()) return false;
     const b = ctx.getBounds();
     if (!b) return false;
@@ -45,10 +45,10 @@ module.exports = function createTricks(ctx) {
     const dir = b.x + b.width / 2 < wa.x + wa.width / 2 ? 1 : -1;
     const targetX = dir > 0 ? wa.x + wa.width - b.width : wa.x;
     busy = true;
-    show(ROLL_SVG[dir]);
+    show(CRAB_SVG);
     const startX = b.x;
     const dist = Math.abs(targetX - startX);
-    const total = Math.max(500, (dist / ROLL_SPEED) * 1000);
+    const total = Math.max(500, (dist / CRAB_SPEED) * 1000);
     const t0 = Date.now();
     const iv = setInterval(() => {
       // 被拖走、来活了、进 mini 就停下
@@ -69,7 +69,7 @@ module.exports = function createTricks(ctx) {
     const delay = MIN_GAP_MS + Math.random() * (MAX_GAP_MS - MIN_GAP_MS);
     timer = setTimeout(() => {
       if (!canPlay()) { schedule(); return; }
-      (Math.random() < 0.5 ? heist : roll)();
+      (Math.random() < 0.5 ? heist : crab)();
       if (!busy) schedule();
     }, delay);
   }
@@ -83,6 +83,6 @@ module.exports = function createTricks(ctx) {
     why,
     start() { started = true; schedule(); },
     heist,
-    roll,
+    crab,
   };
 };

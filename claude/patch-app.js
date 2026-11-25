@@ -50,7 +50,7 @@ function getSpeechWin() {
   }
 }
 
-// 小把戏：偷奶酪、打滚（自动随机触发 + 右键菜单）
+// 小把戏：偷奶酪、横着走（自动随机触发 + 右键菜单）
 s = fs.readFileSync(main, "utf8");
 if (!s.includes('require("./tricks")')) {
   const a = "let _speechWin = null;\n";
@@ -78,7 +78,7 @@ function getTricks() {
 }
 ` + a);
     s = s.replace(b, b + "    getTricks().start();\n");
-    s = s.replace(c, c + "  playHeist: () => getTricks().heist(),\n  playRoll: () => getTricks().roll(),\n");
+    s = s.replace(c, c + "  playHeist: () => getTricks().heist(),\n  playCrab: () => getTricks().crab(),\n");
     s = s.replace('log: (m) => sessionLog(m) });', 'log: (m) => sessionLog(m), tricks: () => getTricks() });');
     fs.writeFileSync(main, s);
   } else {
@@ -90,7 +90,7 @@ let mn = fs.readFileSync(menu, "utf8");
 if (!mn.includes("playHeist")) {
   const anchor = '        click: () => ctx.teasePet("context-menu"),\n      },';
   if (mn.includes(anchor)) {
-    mn = mn.replace(anchor, anchor + '\n      { label: "偷块奶酪", click: () => ctx.playHeist && ctx.playHeist() },\n      { label: "打个滚", click: () => ctx.playRoll && ctx.playRoll() },');
+    mn = mn.replace(anchor, anchor + '\n      { label: "偷块奶酪", click: () => ctx.playHeist && ctx.playHeist() },\n      { label: "横着走", click: () => ctx.playCrab && ctx.playCrab() },');
     fs.writeFileSync(menu, mn);
   }
 }
