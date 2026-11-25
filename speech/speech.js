@@ -146,7 +146,17 @@
     ],
     yawning: ["好困，我把 batch size 调小一点再睡", "哈——顺手把 max_iterations 改成 3"],
     dozing: ["我睡一会儿，训练先暂停一下哈", "zzz……别动我的 learning rate……"],
-    sleeping: ["zzZ……梦里机器人都在喝醉……", "梦见 sim2sim 的 gap 被我填上了……又挖开了", "zzZ……reward +114514……"],
+    sleeping: [
+      "zzZ……梦里机器人都在喝醉……",
+      "梦见 sim2sim 的 gap 被我填上了……又挖开了",
+      "zzZ……reward +114514……",
+      "zzZ……learning rate……再大一点……",
+      "梦话：我没有动你的 config……真的……",
+      "zzZ……4096 个机器人在给我唱摇篮曲……",
+      "梦见 Isaac Lab 的派对还没结束……",
+      "zzZ……把重力……调成……0……",
+      "梦里的 loss 是一条下降的曲线，好美……",
+    ],
     waking: ["我醒了！我睡着的时候谁改了我改过的参数", "刚才梦见你的机器人穿墙了，原来是真的", "我醒了，你的训练跑完了吗？没有？那我再改改"],
     sweeping: ["我在清理你的日志，清到只剩一行：一切正常", "把你的 bug 扫到仿真的地板下面了"],
     carrying: ["我在搬你的 checkpoint，搬到奶龙家里", "这个 rollout 好重，我扛走了"],
@@ -231,6 +241,7 @@
       const h = new Date().getHours();
       if (h >= 23 || h < 6) list = list.concat(LINES.night, LINES.night, LINES.night);
     }
+    if (key === "sleeping") list = list.concat(LINES.dozing);
     const line = pick(list);
     if (!line) return;
     lastLine = line;
@@ -250,7 +261,9 @@
     clearTimeout(idleTimer);
     const delay = IDLE_MIN_MS + Math.random() * (IDLE_MAX_MS - IDLE_MIN_MS);
     idleTimer = setTimeout(() => {
-      if (currentState === "idle") say("idle");
+      // 睡着了也说话（说梦话），其它状态都说平时的台词
+      if (/sleep|collaps|doz|yawn/.test(currentState)) say("sleeping");
+      else say("idle");
       scheduleIdle();
     }, delay);
   }
