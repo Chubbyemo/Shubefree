@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "name": "Chubby Mouse",
+  "author": "Chubbyemo",
+  "version": "2.0.0",
+  "description": "Chubbyemo's little gray mouse as pixel art — every animation is one of her drawings",
+  "viewBox": {
+    "x": -12,
+    "y": -24,
+    "width": 52,
+    "height": 52
+  },
+  "layout": {
+    "contentBox": {
+      "x": 2,
+      "y": 1,
+      "width": 22,
+      "height": 25
+    },
+    "marginBox": {
+      "x": -2,
+      "y": -3,
+      "width": 30,
+      "height": 29
+    },
+    "centerX": 12,
+    "baselineY": 26,
+    "visibleHeightRatio": 0.58,
+    "baselineBottomRatio": 0.05
+  },
+  "eyeTracking": {
+    "enabled": true,
+    "states": [
+      "idle"
+    ],
+    "eyeRatioX": 0.5,
+    "eyeRatioY": 0.6,
+    "maxOffset": 2,
+    "bodyScale": 0.33,
+    "shadowStretch": 0.15,
+    "shadowShift": 0.3,
+    "ids": {
+      "eyes": "eyes-js",
+      "body": "body-js",
+      "shadow": "shadow-js"
+    },
+    "shadowOrigin": "12px 25px"
+  },
+  "states": {
+    "idle": [
+      "mouse-idle-follow.svg"
+    ],
+    "yawning": [
+      "mouse-yawning.svg"
+    ],
+    "dozing": [
+      "mouse-dozing.svg"
+    ],
+    "collapsing": [
+      "mouse-collapsing.svg"
+    ],
+    "thinking": [
+      "mouse-thinking.svg"
+    ],
+    "working": [
+      "mouse-working-typing.svg"
+    ],
+    "juggling": [
+      "mouse-working-juggling.svg"
+    ],
+    "sweeping": [
+      "mouse-working-sweeping.svg"
+    ],
+    "error": [
+      "mouse-error.svg"
+    ],
+    "attention": [
+      "mouse-happy.svg"
+    ],
+    "notification": [
+      "mouse-notification.svg"
+    ],
+    "carrying": [
+      "mouse-working-carrying.svg"
+    ],
+    "sleeping": [
+      "mouse-sleeping.svg"
+    ],
+    "waking": [
+      "mouse-wake.svg"
+    ]
+  },
+  "workingTiers": [
+    {
+      "minSessions": 3,
+      "file": "mouse-working-building.svg"
+    },
+    {
+      "minSessions": 2,
+      "file": "mouse-working-juggling.svg"
+    },
+    {
+      "minSessions": 1,
+      "file": "mouse-working-typing.svg"
+    }
+  ],
+  "jugglingTiers": [
+    {
+      "minSessions": 1,
+      "file": "mouse-working-juggling.svg"
+    }
+  ],
+  "idleAnimations": [
+    {
+      "file": "mouse-idle-look.svg",
+      "duration": 6500
+    },
+    {
+      "file": "mouse-idle-cheese.svg",
+      "duration": 14000
+    },
+    {
+      "file": "mouse-idle-swing.svg",
+      "duration": 9000
+    },
+    {
+      "file": "mouse-idle-beer.svg",
+      "duration": 7000
+    },
+    {
+      "file": "mouse-idle-pacifier.svg",
+      "duration": 6000
+    },
+    {
+      "file": "mouse-idle-super.svg",
+      "duration": 5000
+    }
+  ],
+  "timings": {
+    "minDisplay": {
+      "attention": 4000,
+      "error": 5000,
+      "sweeping": 5500,
+      "notification": 2500,
+      "carrying": 3000,
+      "working": 1000,
+      "thinking": 1000
+    },
+    "autoReturn": {
+      "attention": 4000,
+      "error": 5000,
+      "sweeping": 300000,
+      "notification": 2500,
+      "carrying": 3000
+    },
+    "yawnDuration": 2700,
+    "wakeDuration": 1500,
+    "deepSleepTimeout": 600000,
+    "mouseIdleTimeout": 20000,
+    "mouseSleepTimeout": 60000
+  },
+  "hitBoxes": {
+    "default": {
+      "x": 3,
+      "y": 1,
+      "w": 18,
+      "h": 25
+    },
+    "sleeping": {
+      "x": 1,
+      "y": 6,
+      "w": 26,
+      "h": 20
+    },
+    "wide": {
+      "x": -2,
+      "y": -3,
+      "w": 28,
+      "h": 29
+    }
+  },
+  "wideHitboxFiles": [
+    "mouse-error.svg",
+    "mouse-notification.svg",
+    "mouse-working-juggling.svg",
+    "mouse-happy.svg",
+    "mouse-working-typing.svg"
+  ],
+  "sleepingHitboxFiles": [
+    "mouse-sleeping.svg",
+    "mouse-collapsing.svg"
+  ],
+  "reactions": {
+    "drag": {
+      "file": "mouse-react-drag.svg"
+    },
+    "clickLeft": {
+      "file": "mouse-react-left.svg",
+      "duration": 2500
+    },
+    "clickRight": {
+      "file": "mouse-react-right.svg",
+      "duration": 2500
+    },
+    "annoyed": {
+      "file": "mouse-react-annoyed.svg",
+      "duration": 3500
+    },
+    "double": {
+      "files": [
+        "mouse-react-double.svg",
+        "mouse-react-double-angel.svg"
+      ],
+      "duration": 3500
+    }
+  },
+  "miniMode": {
+    "supported": false
+  },
+  "objectScale": {
+    "widthRatio": 1.9,
+    "heightRatio": 1.3,
+    "offsetX": -0.45,
+    "offsetY": -0.25
+  }
+}
