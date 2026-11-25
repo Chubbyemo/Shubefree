@@ -71,6 +71,34 @@
       "你的 baseline 是什么？鼠鼠的 baseline 是一块奶酪",
       "实验做完了吗？做完了就再做一遍，科研就是这样",
     ],
+    mischief: [
+      "我在你的仿真里把重力调成了 0.5，机器人现在会飞了",
+      "你的机器人抓不起来东西，是因为鼠鼠在它手上抹了黄油",
+      "我给每个 env 都放了一块奶酪，4096 个机器人在抢",
+      "我把你的 random seed 改成了我的生日",
+      "reward 里偷偷加了一项：给鼠鼠喂奶酪 +100",
+      "我把 batch size 改成了 1，这样每个样本都能被好好爱护",
+      "你的 policy 收敛了，收敛到鼠鼠这里了",
+      "sim 和 real 之间的那条缝，鼠鼠住进去了",
+      "我把摩擦系数调成了 0，机器人在仿真里滑冰呢",
+      "我在你的场景里加了一只鼠鼠，机器人不敢动了",
+      "我把 epsilon 改成了 1，现在全是探索，没有利用",
+      "我把 gamma 改成了 0，机器人现在只活在当下",
+      "刚刚帮你把 max_iterations 改成了 ∞，不用谢",
+      "我把相机的分辨率调成了 2x2，机器人说世界好简单",
+      "你的 tensorboard 曲线被鼠鼠画了一只猫",
+      "我给机械臂多加了一个关节，现在它会比耶了",
+      "我把 timestep 调大了 100 倍，机器人直接穿墙了",
+      "仿真里的桌子被鼠鼠啃掉一条腿，物体一直在滚",
+      "我把 action noise 调到了 114514，机器人在跳街舞",
+      "我把你的 GPU 借给奶龙打游戏了，训练暂停一下哈",
+      "你的 eval 我替你跑过了，结果是：奶酪",
+      "我把机器人的手换成了鼠鼠的爪子，它学会了偷吃",
+      "我把 decimation 改成了 0.5，现在一个动作执行两遍",
+      "reward 曲线一直往上？是鼠鼠在后面推",
+      "我把物体的质量改成了 1000kg，机器人决定躺平",
+      "我把你的 config 用 yaml 写成了一首诗",
+    ],
     night: [
       "这么晚了还不睡，鼠鼠要告诉奶龙了",
       "深夜的米麻鼠特别香",
@@ -132,6 +160,13 @@
     double: ["鼠鼠跳舞！姑姑嘎嘎！", "鼠鼠升天了，天上有米麻鼠吗"],
   };
 
+  // 最爱的几句：平时出现的概率更高
+  const FAVORITES = [
+    "我刚刚在你的 Isaac Lab 里开了个派对，机器人都喝醉了",
+    "sim2sim 的 gap 是鼠鼠挖的，抱歉",
+    "我把你的 learning rate 改成 114514 了",
+  ];
+
   const BUBBLE_MS = 4200;
   const MIN_GAP_MS = 3500;
   const IDLE_MIN_MS = 70 * 1000;
@@ -165,7 +200,7 @@
     if (!force && now - lastSpoke < MIN_GAP_MS) return;
     let list = LINES[key];
     if (key === "idle") {
-      list = list.concat(LINES.research);
+      list = list.concat(LINES.research, LINES.mischief, FAVORITES, FAVORITES, FAVORITES);
       const h = new Date().getHours();
       if (h >= 23 || h < 6) list = list.concat(LINES.night, LINES.night);
     }

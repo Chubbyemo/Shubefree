@@ -42,7 +42,8 @@ cd clawd-buddy; npm start
 
 | 分组 | 什么时候说 |
 | --- | --- |
-| `idle` + `research` | 平时，每 1–3 分钟随机一句 |
+| `idle` + `research` + `mischief` | 平时，每 1–3 分钟随机一句 |
+| `FAVORITES` | 最爱的几句，平时出现的概率是别的 3 倍 |
 | `night` | 晚上 11 点到早上 6 点额外混进来 |
 | `poke` / `annoyed` / `double` | 被戳、戳烦了、双击 |
 | `drag` | 被拖起来 |
