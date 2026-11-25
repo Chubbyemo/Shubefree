@@ -25,8 +25,15 @@ function clip(s, n) {
   return s.length > n ? s.slice(0, n - 1) + "…" : s;
 }
 
-module.exports = function startClaudeBridge({ updateSession, sendToRenderer, log }) {
+module.exports = function startClaudeBridge({ updateSession, sendToRenderer, log, tricks }) {
   const server = http.createServer((req, res) => {
+    // 本机手动触发小把戏：curl -X POST 127.0.0.1:23333/trick/heist 或 /trick/roll
+    const m = req.method === "POST" && /^\/trick\/(heist|roll)$/.exec(req.url || "");
+    if (m) {
+      const t = tricks && tricks();
+      const ok = t && t[m[1]]();
+      res.writeHead(ok ? 204 : 409); res.end(ok ? "" : (t ? t.why() : "")); return;
+    }
     if (req.method !== "POST" || req.url !== "/event") {
       res.writeHead(404); res.end(); return;
     }

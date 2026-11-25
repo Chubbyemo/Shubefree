@@ -50,6 +50,51 @@ function getSpeechWin() {
   }
 }
 
+// 小把戏：偷奶酪、打滚（自动随机触发 + 右键菜单）
+s = fs.readFileSync(main, "utf8");
+if (!s.includes('require("./tricks")')) {
+  const a = "let _speechWin = null;\n";
+  const b = "    startClaudeBridgeOnce();\n";
+  const c = "  teasePet: (source) => teasePet(source),\n";
+  if (s.includes(a) && s.includes(b) && s.includes(c)) {
+    s = s.replace(a, `let _tricks = null;
+function getTricks() {
+  if (!_tricks) {
+    _tricks = require("./tricks")({
+      getState: () => _state.getCurrentState(),
+      idleSvg: () => getSvgOverride("idle") || (activeTheme && activeTheme.states.idle[0]),
+      isMini: () => _mini.getMiniMode(),
+      isDragging: () => dragLocked,
+      isHidden: () => petHidden,
+      isDnd: () => doNotDisturb,
+      getBounds: () => getPetWindowBounds(),
+      getWorkArea: (x, y) => getNearestWorkArea(x, y),
+      moveTo: (b) => applyPetWindowBounds(b),
+      sendToRenderer,
+      sendToHitWin,
+    });
+  }
+  return _tricks;
+}
+` + a);
+    s = s.replace(b, b + "    getTricks().start();\n");
+    s = s.replace(c, c + "  playHeist: () => getTricks().heist(),\n  playRoll: () => getTricks().roll(),\n");
+    s = s.replace('log: (m) => sessionLog(m) });', 'log: (m) => sessionLog(m), tricks: () => getTricks() });');
+    fs.writeFileSync(main, s);
+  } else {
+    console.error("main.js 结构变了，小把戏没装上");
+  }
+}
+const menu = path.join(dir, "src", "menu.js");
+let mn = fs.readFileSync(menu, "utf8");
+if (!mn.includes("playHeist")) {
+  const anchor = '        click: () => ctx.teasePet("context-menu"),\n      },';
+  if (mn.includes(anchor)) {
+    mn = mn.replace(anchor, anchor + '\n      { label: "偷块奶酪", click: () => ctx.playHeist && ctx.playHeist() },\n      { label: "打个滚", click: () => ctx.playRoll && ctx.playRoll() },');
+    fs.writeFileSync(menu, mn);
+  }
+}
+
 let p = fs.readFileSync(preload, "utf8");
 if (!p.includes("showSpeech")) {
   p = p.replace("  onPlaySound:", '  showSpeech: (text, ms) => ipcRenderer.send("speech-show", text, ms),\n  hideSpeech: () => ipcRenderer.send("speech-hide"),\n  onPlaySound:');

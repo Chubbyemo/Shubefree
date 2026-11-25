@@ -193,6 +193,21 @@
     "我把你的 learning rate 改成 114514 了",
   ];
 
+  // 小把戏：偷奶酪、打滚
+  LINES.heist = [
+    "嘘……我去去就回",
+    "这块奶酪现在归鼠鼠了",
+    "我什么都没拿，你看错了",
+    "偷奶酪的事，你就当没看见",
+  ];
+  LINES.roll = [
+    "咕噜咕噜咕噜～",
+    "让一让让一让！刹不住了！",
+    "我在测试新的 locomotion policy",
+    "滚动式前进，reward 拉满",
+    "这就是 sim2sim 的 gap 吗，我滚过去了",
+  ];
+
   const BUBBLE_MS = 10000;
   const MIN_GAP_MS = 3500;
   const IDLE_MIN_MS = 15 * 1000;
@@ -283,6 +298,8 @@
   function keyForState(state, svg) {
     const s = String(state || "");
     const f = String(svg || "");
+    if (/heist/.test(f)) return "heist";
+    if (/roll/.test(f)) return "roll";
     if (s === "idle") return null;
     if (LINES[s]) return s;
     if (/build/.test(s + f)) return "building";
@@ -302,10 +319,10 @@
   api.onStateChange((state, svg) => {
     const prev = currentState;
     currentState = state;
-    if (state === prev) return;
+    if (state === prev && !/heist|roll/.test(String(svg || ""))) return;
     const key = keyForState(state, svg);
     if (!key) return;
-    const sure = key === "waking" || key === "error" || key === "notification";
+    const sure = key === "waking" || key === "error" || key === "notification" || key === "heist" || key === "roll";
     if (sure || Math.random() < STATE_CHANCE) say(key);
   });
 

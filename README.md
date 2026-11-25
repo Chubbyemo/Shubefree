@@ -36,6 +36,21 @@ cd clawd-buddy; npm start
 
 第一次启动如果还是螃蟹，右键它 → Theme → Chubby Mouse。
 
+## 小把戏
+
+小老鼠闲着的时候，每隔 3～7 分钟会随机表演一个：
+
+- **偷奶酪**：脚下开个洞钻下去，从旁边的洞探头，踮脚走过去叼走奶酪，飞快跑回洞里，最后抱着奶酪从原地冒出来。
+- **打滚**：从屏幕一边滚到另一边（它在左半边就往右滚，反之往左）。
+
+想马上看：右键小老鼠 → 「偷块奶酪」或「打个滚」。睡着、Mini 模式、勿扰模式、正在拖动的时候不会表演。
+
+动画是用 [`tools/make_tricks.py`](tools/make_tricks.py) 从原有的帧拼出来的，改完重新生成：
+
+```bash
+python3 tools/make_tricks.py theme/chubby-mouse/assets
+```
+
 ## 连上 Claude Code
 
 装好后，小老鼠会跟着 Claude Code 的动作说话：
@@ -79,6 +94,8 @@ theme/chubby-mouse/   像素主题（theme.json + SVG 动画）
 speech/speech.js      说话气泡逻辑和台词
 speech/speech.css     气泡样式
 bubble/               独立的气泡窗口，浮在小老鼠头顶，不挡任何动画
+tricks/tricks.js      小把戏的调度（偷奶酪、打滚）
+tools/                生成小把戏动画的脚本
 claude/               连 Claude Code 用的桥、hook 脚本和配置脚本
 install.sh            Linux / macOS 安装脚本
 install.ps1           Windows 安装脚本

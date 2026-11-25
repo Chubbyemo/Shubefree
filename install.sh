@@ -37,6 +37,7 @@ echo "==> 接上 Claude Code（Claude 干活时小老鼠会跟着说话）"
 cp "$HERE/claude/claude-bridge.js" "$TARGET/src/"
 mkdir -p "$TARGET/hooks" && cp "$HERE/claude/clawd-hook.js" "$TARGET/hooks/"
 cp "$HERE"/bubble/* "$TARGET/src/"
+cp "$HERE/tricks/tricks.js" "$TARGET/src/"
 node "$HERE/claude/patch-app.js" "$TARGET" || true
 if [ -z "${SKIP_CLAUDE_HOOKS:-}" ]; then
   node "$HERE/claude/setup-hooks.js" "$TARGET/hooks/clawd-hook.js"
