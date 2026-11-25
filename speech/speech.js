@@ -252,6 +252,11 @@
     if (muted || mini || !line) return;
     lastLine = line;
     lastSpoke = now || Date.now();
+    // 有独立气泡窗口时显示在所有动画之上；没有就退回到宠物窗口里
+    if (window.electronAPI && window.electronAPI.showSpeech) {
+      window.electronAPI.showSpeech(line, BUBBLE_MS);
+      return;
+    }
     bubble.textContent = line;
     bubble.classList.add("show");
     clearTimeout(hideTimer);
@@ -261,6 +266,7 @@
   function hideNow() {
     clearTimeout(hideTimer);
     bubble.classList.remove("show");
+    if (window.electronAPI && window.electronAPI.hideSpeech) window.electronAPI.hideSpeech();
   }
 
   function scheduleIdle() {

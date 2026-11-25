@@ -22,9 +22,40 @@ function startClaudeBridgeOnce() {
   fs.writeFileSync(main, s);
 }
 
+// 独立气泡窗口：气泡浮在所有动画上面
+s = fs.readFileSync(main, "utf8");
+if (!s.includes("speech-window-main")) {
+  const a = "let _claudeBridge = null;\n";
+  const b = "      repositionFloatingBubbles();\n    };";
+  const c = '  ipcMain.on("pause-cursor-polling", () => { idlePaused = true; });\n';
+  if (s.includes(a) && s.includes(b) && s.includes(c)) {
+    s = s.replace(a, a + `let _speechWin = null;
+function getSpeechWin() {
+  if (!_speechWin) {
+    _speechWin = require("./speech-window-main")({
+      getPetBounds: () => getPetWindowBounds(),
+      getWorkArea: (x, y) => getNearestWorkArea(x, y),
+      isLinux, linuxType: LINUX_WINDOW_TYPE,
+      isHidden: () => petHidden || !win || win.isDestroyed() || !win.isVisible(),
+    });
+  }
+  return _speechWin;
+}
+`);
+    s = s.replace(b, "      repositionFloatingBubbles();\n      if (_speechWin) _speechWin.reposition();\n    };");
+    s = s.replace(c, c + '  ipcMain.on("speech-show", (_, text, ms) => getSpeechWin().show(text, ms));\n  ipcMain.on("speech-hide", () => { if (_speechWin) _speechWin.hide(); });\n');
+    fs.writeFileSync(main, s);
+  } else {
+    console.error("main.js 结构变了，气泡会留在宠物窗口里");
+  }
+}
+
 let p = fs.readFileSync(preload, "utf8");
+if (!p.includes("showSpeech")) {
+  p = p.replace("  onPlaySound:", '  showSpeech: (text, ms) => ipcRenderer.send("speech-show", text, ms),\n  hideSpeech: () => ipcRenderer.send("speech-hide"),\n  onPlaySound:');
+}
 if (!p.includes("onClaudeEvent")) {
   p = p.replace("  onPlaySound:", '  onClaudeEvent: (cb) => ipcRenderer.on("claude-event", (_, ev) => cb(ev)),\n  onPlaySound:');
-  fs.writeFileSync(preload, p);
 }
-console.log("已接上 Claude 桥");
+fs.writeFileSync(preload, p);
+console.log("已接上 Claude 桥和气泡窗口");

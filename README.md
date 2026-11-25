@@ -78,6 +78,7 @@ Claude 干活期间，平时那句每 15 秒一句的台词也会换成和当前
 theme/chubby-mouse/   像素主题（theme.json + SVG 动画）
 speech/speech.js      说话气泡逻辑和台词
 speech/speech.css     气泡样式
+bubble/               独立的气泡窗口，浮在小老鼠头顶，不挡任何动画
 claude/               连 Claude Code 用的桥、hook 脚本和配置脚本
 install.sh            Linux / macOS 安装脚本
 install.ps1           Windows 安装脚本

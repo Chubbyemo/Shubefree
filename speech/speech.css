@@ -1,13 +1,14 @@
 #speech-bubble {
   position: absolute;
-  top: 4%;
+  /* 从小老鼠头顶往上长，不往下盖住动画 */
+  bottom: 73%;
   left: 50%;
-  max-width: 92%;
+  max-width: 98%;
   width: max-content;
-  padding: 0.35em 0.6em;
+  padding: 0.2em 0.45em;
   font-family: "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
-  font-size: clamp(11px, 5.6vw, 17px);
-  line-height: 1.3;
+  font-size: clamp(10px, 5vw, 15px);
+  line-height: 1.2;
   color: #222;
   background: #fffdf4;
   border: 2px solid #222;
@@ -30,9 +31,9 @@
   content: "";
   position: absolute;
   left: 50%;
-  bottom: -7px;
-  width: 8px;
-  height: 8px;
+  bottom: -5px;
+  width: 6px;
+  height: 6px;
   background: #fffdf4;
   border-right: 2px solid #222;
   border-bottom: 2px solid #222;
