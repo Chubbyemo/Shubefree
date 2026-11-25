@@ -35,6 +35,16 @@ if ($html -notmatch "speech.js") {
 }
 [IO.File]::WriteAllText($Index, $html, (New-Object Text.UTF8Encoding $false))
 
+Write-Host "==> 接上 Claude Code（Claude 干活时小老鼠会跟着说话）"
+Copy-Item (Join-Path $Here "claude\claude-bridge.js") (Join-Path $Target "src")
+$HookDir = Join-Path $Target "hooks"
+New-Item -ItemType Directory -Force $HookDir | Out-Null
+Copy-Item (Join-Path $Here "claude\clawd-hook.js") $HookDir
+node (Join-Path $Here "claude\patch-app.js") $Target
+if (-not $env:SKIP_CLAUDE_HOOKS) {
+  node (Join-Path $Here "claude\setup-hooks.js") ((Join-Path $HookDir "clawd-hook.js") -replace '\\','/')
+}
+
 $Prefs = Join-Path $env:APPDATA "clawd-buddy\clawd-prefs.json"
 if (Test-Path $Prefs) {
   $p = Get-Content -Raw -Encoding UTF8 $Prefs

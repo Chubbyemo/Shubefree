@@ -36,6 +36,25 @@ cd clawd-buddy; npm start
 
 第一次启动如果还是螃蟹，右键它 → Theme → Chubby Mouse。
 
+## 连上 Claude Code
+
+装好后，小老鼠会跟着 Claude Code 的动作说话：
+
+| Claude 在干什么 | 小老鼠 |
+|---|---|
+| 你发了一条消息 | 进入思考状态，按消息里的关键词（仿真、reward、训练、bug、git……）说捣乱台词 |
+| 读 / 改 / 新建文件 | "鼠鼠正在改 xxx.py，放心，只动了一点点" |
+| 跑命令 | "在跑 python …，我赌它会炸" |
+| 报错 | "不是我干的！……好吧是我" |
+| 等你批准权限 | "快来！Claude 要你点一下" |
+| 干完了 | "搞定了，你检查一下有没有被我加料" |
+
+Claude 干活期间，平时那句每 15 秒一句的台词也会换成和当前话题相关的。
+
+原理：安装脚本在 `~/.claude/settings.json` 里加了几个 hook（原文件会备份成 `settings.json.before-clawd`）。每次事件触发，hook 把工具名、文件名、消息开头这几个字段发到本机 `127.0.0.1:23333`，桌宠收到后切换动画、说话。数据不出本机，桌宠没开时 hook 会直接跳过，不影响 Claude。
+
+不想要的话：装的时候设置 `SKIP_CLAUDE_HOOKS=1`；已经装了的，删掉 `settings.json` 里命令含 `clawd-hook.js` 的那几项。
+
 ## 改台词
 
 台词都在 [`speech/speech.js`](speech/speech.js) 开头的 `LINES` 里，按场合分组：
@@ -49,6 +68,7 @@ cd clawd-buddy; npm start
 | `drag` | 被拖起来 |
 | `waking` / `sleeping` / `dozing` / `yawning` | 睡觉相关 |
 | `thinking` / `working` / `error` / `attention` / `notification` 等 | 配合 Claude Code 等工具工作时 |
+| `TOPICS` / `TOOL_LINES`（文件后半段） | 连上 Claude Code 后，按话题和工具说的台词，`{x}` 会换成文件名或命令 |
 
 改完重新运行一次安装脚本，再重启桌宠就生效。勿扰模式和 Mini 模式下不说话。
 
@@ -58,6 +78,7 @@ cd clawd-buddy; npm start
 theme/chubby-mouse/   像素主题（theme.json + SVG 动画）
 speech/speech.js      说话气泡逻辑和台词
 speech/speech.css     气泡样式
+claude/               连 Claude Code 用的桥、hook 脚本和配置脚本
 install.sh            Linux / macOS 安装脚本
 install.ps1           Windows 安装脚本
 ```

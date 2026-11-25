@@ -242,10 +242,16 @@
       if (h >= 23 || h < 6) list = list.concat(LINES.night, LINES.night, LINES.night);
     }
     if (key === "sleeping") list = list.concat(LINES.dozing);
+    if (key === "idle" && claudeBusy()) list = topicLines().concat(topicLines(), list.slice(0, 20));
     const line = pick(list);
     if (!line) return;
+    show(line, now);
+  }
+
+  function show(line, now) {
+    if (muted || mini || !line) return;
     lastLine = line;
-    lastSpoke = now;
+    lastSpoke = now || Date.now();
     bubble.textContent = line;
     bubble.classList.add("show");
     clearTimeout(hideTimer);
@@ -307,6 +313,120 @@
   api.onStartDragReaction(() => say("drag", true));
   api.onDndChange((enabled) => { muted = !!enabled; if (muted) hideNow(); });
   api.onMiniModeChange((enabled) => { mini = !!enabled; if (mini) hideNow(); });
+
+  // ── 连上 Claude Code：根据 Claude 正在干的事说话 ──
+  // 真实的文件名 / 命令只在本机桌宠里显示，不会写进任何文件。
+  const TOPICS = [
+    { re: /isaac|sim\b|仿真|mujoco|gazebo|sim2sim|sim2real/i, lines: [
+      "Claude 在弄仿真，我悄悄把重力调成了 9.9",
+      "又是仿真！我在你的场景里藏了一块香蕉皮",
+      "sim2sim 的 gap 是鼠鼠挖的，抱歉",
+      "我刚刚在你的 Isaac Lab 里开了个派对，机器人都喝醉了",
+    ]},
+    { re: /reward|奖励|policy|ppo|rl\b|强化/i, lines: [
+      "reward 写好了吗？我偷偷加了一项「给鼠鼠喂饭」",
+      "policy 学会的第一件事是给我鞠躬",
+      "我把你的 reward 乘了个 -1，看看会发生什么",
+    ]},
+    { re: /train|训练|lr|learning rate|epoch|loss|ckpt|checkpoint/i, lines: [
+      "我把你的 learning rate 改成 114514 了",
+      "loss 在下降！……是我拿铅笔往下画的",
+      "checkpoint 我帮你存了，存在我的奶酪洞里",
+    ]},
+    { re: /bug|报错|error|fix|修|崩/i, lines: [
+      "这个 bug 不是我放的……大概不是",
+      "修 bug 的时候我在旁边加 bug，很公平",
+    ]},
+    { re: /git|commit|push|仓库|repo/i, lines: [
+      "commit message 我帮你写好了：鼠鼠到此一游",
+      "push 之前让我先往里面塞一根奶酪",
+    ]},
+    { re: /桌宠|鼠|气泡|speech|clawd/i, lines: [
+      "你们在讨论我？我脸红了",
+      "Claude 在给我加新台词，我要说一万句",
+    ]},
+  ];
+  const GENERIC_BUSY = [
+    "Claude 在干活，鼠鼠在监工",
+    "我在旁边帮 Claude 递奶酪",
+    "Claude 写一行，我改一行",
+  ];
+  let lastPrompt = "";
+  let lastClaudeAt = 0;
+  let lastToolSay = 0;
+
+  function claudeBusy() { return Date.now() - lastClaudeAt < 90 * 1000; }
+  function topicLines() {
+    const out = [];
+    for (const t of TOPICS) if (t.re.test(lastPrompt)) out.push(...t.lines);
+    return out.length ? out : GENERIC_BUSY;
+  }
+  function pickFrom(list) { return list[Math.floor(Math.random() * list.length)]; }
+  function fill(list, x) { return pickFrom(list).replace("{x}", x); }
+
+  const TOOL_LINES = {
+    edit: ["鼠鼠正在改 {x}，放心，只动了一点点", "{x} 被我加了一行注释：鼠鼠到此一游", "正在改 {x}……顺便把缩进换成了奶酪"],
+    write: ["新建了 {x}，里面藏了一只鼠", "{x} 写好了，作者栏写的是鼠鼠"],
+    read: ["Claude 在看 {x}，我也在看，看不懂", "正在偷看 {x}"],
+    bash: ["在跑 {x}，我赌它会炸", "{x}……这个命令是我教 Claude 的", "跑 {x} 之前我先按了一下回车"],
+    search: ["在找 {x}，我知道在哪但我不说", "搜 {x} 呢，鼠鼠帮忙翻垃圾桶"],
+    web: ["Claude 去 {x} 冲浪了，带我一个", "在逛 {x}"],
+    agent: ["Claude 叫了个小弟：{x}", "派了个分身去 {x}，鼠鼠也要分身"],
+    other: ["Claude 在用 {x}，鼠鼠在用爪子"],
+  };
+  function toolKind(tool) {
+    if (/Edit|MultiEdit|NotebookEdit/.test(tool)) return "edit";
+    if (/Write/.test(tool)) return "write";
+    if (/Read/.test(tool)) return "read";
+    if (/Bash/.test(tool)) return "bash";
+    if (/Grep|Glob|Search/.test(tool)) return "search";
+    if (/Web|Fetch/.test(tool)) return "web";
+    if (/Agent|Task/.test(tool)) return "agent";
+    return "other";
+  }
+  function short(x, n) { x = String(x || ""); return x.length > n ? x.slice(0, n - 1) + "…" : x; }
+
+  if (api.onClaudeEvent) api.onClaudeEvent((ev) => {
+    if (!ev) return;
+    lastClaudeAt = Date.now();
+    const now = Date.now();
+    switch (ev.event) {
+      case "UserPromptSubmit":
+        if (ev.prompt) lastPrompt = ev.prompt;
+        show(pickFrom(topicLines().concat([
+          "收到！让鼠鼠想想……顺便把你的 seed 改了",
+          "你说的我都听到了，我决定假装没听到",
+        ])));
+        break;
+      case "PreToolUse": {
+        // 工具调用很密，最多 6 秒说一次
+        if (now - lastToolSay < 6000) return;
+        lastToolSay = now;
+        const kind = toolKind(ev.tool || "");
+        const x = short(ev.target || ev.tool, kind === "bash" ? 28 : 36) || ev.tool;
+        show(fill(TOOL_LINES[kind], x));
+        break;
+      }
+      case "PostToolUseFailure":
+        show(pickFrom(["不是我干的！……好吧是我", "炸了！我就说会炸", "报错了，鼠鼠先溜了"]));
+        break;
+      case "PermissionRequest":
+      case "Notification":
+        show(pickFrom(["快来！Claude 要你点一下", "Claude 在等你，我在等奶酪", "喂喂，有人找你"]));
+        break;
+      case "Stop":
+        show(pickFrom(["搞定了，你检查一下有没有被我加料", "Claude 干完了，功劳分我一半", "做完了！现在可以给我一杯米麻鼠了吗"]));
+        break;
+      case "PreCompact":
+        show(pickFrom(["Claude 在整理记忆，我在帮它忘掉一些事"]));
+        break;
+      case "SubagentStart":
+        show(pickFrom(["Claude 叫了个帮手，鼠鼠也想要帮手"]));
+        break;
+      default:
+        break;
+    }
+  });
 
   scheduleIdle();
   setTimeout(() => say("idle"), 2500);
