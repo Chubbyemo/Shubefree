@@ -95,6 +95,29 @@ if (!mn.includes("playHeist")) {
   }
 }
 
+const hitR = path.join(dir, "src", "hit-renderer.js");
+let hr = fs.readFileSync(hitR, "utf8");
+if (!hr.includes("mix the celebration")) {
+  const old = `      firstClickDir = null;
+      window.hitAPI.petSingleClick();`;
+  const neu = `      const dir = firstClickDir;
+      firstClickDir = null;
+      // Single click: mix the celebration with the other reactions.
+      const pool = [];
+      const sideReact = dir === "left" ? leftReact : rightReact;
+      if (sideReact) pool.push([sideReact.file, sideReact.duration || 2500], [sideReact.file, sideReact.duration || 2500]);
+      if (annoyedReact) pool.push([annoyedReact.file, annoyedReact.duration || 3500]);
+      if (doubleReact) for (const f of (doubleReact.files || [doubleReact.file])) pool.push([f, doubleReact.duration || 3500]);
+      if (pool.length && Math.random() < 0.75) {
+        const [f, d] = pool[Math.floor(Math.random() * pool.length)];
+        playReaction(f, d);
+      } else {
+        window.hitAPI.petSingleClick();
+      }`;
+  if (hr.includes(old)) { hr = hr.replace(old, neu); fs.writeFileSync(hitR, hr); }
+  else console.error("hit-renderer.js 结构变了，单击表情没改上");
+}
+
 let p = fs.readFileSync(preload, "utf8");
 if (!p.includes("showSpeech")) {
   p = p.replace("  onPlaySound:", '  showSpeech: (text, ms) => ipcRenderer.send("speech-show", text, ms),\n  hideSpeech: () => ipcRenderer.send("speech-hide"),\n  onPlaySound:');
