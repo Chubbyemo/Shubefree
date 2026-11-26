@@ -1,4 +1,4 @@
-"""Tuck the sleeping mouse into its cheese bed: blanket, blue nightcap (idempotent).
+"""Sleeping mouse: cheese blanket, blue nightcap, shadow instead of the bed (idempotent).
 
 usage: python3 make_sleep.py <assets dir>
 """
@@ -10,6 +10,7 @@ OUT = '#1b1b1d'
 CHEESE, HOLE = '#f8d088', '#f2a93b'
 BLUE, BLUE_D, WHITE = '#4a8fe7', '#2f6cc0', '#f4f4f4'
 ZZZ = '#f5c518'
+SHADOW = 'shadow'
 LIGHT = '#fbe6b0'
 
 
@@ -26,7 +27,7 @@ def blanket(g):
     """Cheese blanket draped over the back half, wavy hem."""
     add = {}
     x0, x1 = 15, 27
-    hem = {x: (14 if x <= 23 else 16) for x in range(x0, x1 + 1)}  # rests on the bed, drapes past its edge
+    hem = {x: 14 for x in range(x0, x1 + 1)}
     tops = {}
     for x in range(x0, x1 + 1):
         top = min((y for (xx, y), c in g.items() if xx == x and c != ZZZ and 0 <= y <= 13), default=7)
@@ -84,11 +85,12 @@ def emit(add):
                 if run: rs.append(run)
                 run = [x, y, 1]
         rs.append(run)
-        out.append('<g fill="%s">' % c + ''.join('<rect x="%d" y="%d" width="%d" height="1"/>' % tuple(r) for r in rs) + '</g>')
+        head = '<g fill="#1b1b1d" fill-opacity="0.22">' if c == SHADOW else '<g fill="%s">' % c
+        out.append(head + ''.join('<rect x="%d" y="%d" width="%d" height="1"/>' % tuple(r) for r in rs) + '</g>')
     return ''.join(out)
 
 
-DY = 4  # drop the mouse onto the cheese bed (bed top is y 18)
+DY = 9  # no bed: drop the mouse to the ground line, soft shadow underneath
 
 
 def main(assets):
@@ -102,11 +104,13 @@ def main(assets):
     for i, m in enumerate(heads):
         end = heads[i + 1].start() if i + 1 < len(heads) else s.rindex('</svg>')
         g = cells(parse_rects(s[m.end():end]))
-        bed = {p: c for p, c in g.items() if p[1] >= 18}
-        mouse = {p: c for p, c in g.items() if p[1] < 18}
+        mouse = {p: c for p, c in g.items() if p[1] <= 14}  # drop the cheese bed and tail bits under the blanket
         mouse.update(blanket(mouse))
         mouse.update(nightcap())
-        final = dict(bed)
+        final = {}
+        for y, (a, b) in {15: (1, 28), 16: (4, 25)}.items():
+            for x in range(a, b + 1):
+                final[(x, y + DY)] = SHADOW
         final.update({(x, y + DY): c for (x, y), c in mouse.items()})
         pieces.append(s[last:m.end()] + emit(final) + '</g>')
         last = end
