@@ -51,7 +51,7 @@ cd clawd-buddy; npm start
 python3 tools/make_tricks.py theme/chubby-mouse/assets
 ```
 
-睡觉的时候小老鼠戴着蓝色小睡帽、盖着奶酪被子，是 [`tools/make_sleep.py`](tools/make_sleep.py) 加上去的（重复运行不会叠两层）：
+睡觉的时候小老鼠戴着蓝色小睡帽、躺在奶酪床上盖着奶酪被子，是 [`tools/make_sleep.py`](tools/make_sleep.py) 加上去的（只对原图生效，重复运行会跳过）：
 
 ```bash
 python3 tools/make_sleep.py theme/chubby-mouse/assets
