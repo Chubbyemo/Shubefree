@@ -51,6 +51,12 @@ cd clawd-buddy; npm start
 python3 tools/make_tricks.py theme/chubby-mouse/assets
 ```
 
+睡觉的时候小老鼠戴着蓝色小睡帽、盖着奶酪被子，是 [`tools/make_sleep.py`](tools/make_sleep.py) 加上去的（重复运行不会叠两层）：
+
+```bash
+python3 tools/make_sleep.py theme/chubby-mouse/assets
+```
+
 ## 连上 Claude Code
 
 装好后，小老鼠会跟着 Claude Code 的动作说话：
