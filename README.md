@@ -64,6 +64,17 @@ python3 tools/make_ikebana.py theme/chubby-mouse/assets
 python3 tools/make_sleep.py theme/chubby-mouse/assets
 ```
 
+## 微信表情包
+
+[`tools/make_wechat.py`](tools/make_wechat.py) 把动画转成 24 张 240×240 的循环 GIF（透明背景），顺便画好封面、聊天页图标、横幅和赞赏图，尺寸按微信表情开放平台的要求：
+
+```bash
+python3 tools/make_wechat.py theme/chubby-mouse/assets 输出目录
+```
+
+只想把某几个动画转成 GIF 用 [`tools/make_gif.py`](tools/make_gif.py)。
+
+
 ## 连上 Claude Code
 
 装好后，小老鼠会跟着 Claude Code 的动作说话：
