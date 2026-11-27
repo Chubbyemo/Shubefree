@@ -25,6 +25,7 @@ DARK = '#1b1b1d'
 GREY, GREY_L = '#8d8d8d', '#b4b4b6'
 PINK = '#d6c4c4'
 BLUSH = '#f0a0a8'
+GOLD = '#f5c518'
 HEAD = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-12 -24 52 52" width="500" height="500" shape-rendering="crispEdges">'
 
 # ---------------------------------------------------------------- flowers
@@ -240,28 +241,11 @@ def mouse(eyes='look', blush=False):
             ((8, 7), (16, 7), (7, 8), (17, 8)))]
     e = {'look': [(9, 7), (9, 8), (17, 7), (17, 8)],          # glancing right at the vase
          'happy': [(7, 8), (8, 7), (9, 8), (15, 8), (16, 7), (17, 8)],
-         'focus': [(9, 8), (10, 8), (17, 8), (18, 8)]}[eyes]
+         'up': [(9, 6), (9, 7), (17, 6), (17, 7)],                # watching the sky
+         'wow': [(8, 7), (9, 7), (8, 8), (9, 8), (16, 7), (17, 7), (16, 8), (17, 8)]}[eyes]  # round eyes
     out = body + [(x + MDX, y, 1, 1, DARK) for x, y in e]
     if blush:
         out += [(x + MDX, 10, 2, 1, BLUSH) for x in (6, 17)]
-    return out
-
-
-def arm(gx, gy):
-    """A raised arm from the shoulder to a grip point (gx, gy): 2 px thick, pink paw."""
-    sx, sy = 15, 16
-    pts = line(sx, sy, gx - 1, gy)
-    fill = set()
-    for x, y in pts:
-        fill |= {(x, y), (x, y + 1)}
-    fill |= {(gx, gy), (gx, gy + 1)}
-    out = []
-    for x, y in fill:
-        for q in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
-            if q not in fill and q[0] > sx:
-                out.append((q[0], q[1], 1, 1, DARK))
-    out += [(x, y, 1, 1, GREY) for x, y in fill]
-    out += [(gx, gy, 1, 1, PINK), (gx, gy + 1, 1, 1, PINK)]
     return out
 
 
@@ -270,17 +254,6 @@ SHADOW = [(1 + MDX, 25, 12, 1, '#00000033')]
 
 def cells_to_rects(cells):
     return [(x, y, 1, 1, c) for x, y, c in cells]
-
-
-def grip_point(name, bx, hx, hy, lift):
-    """Where the paw holds the stem: a few pixels above the neck."""
-    pts = line(bx, MOUTH, hx, hy)
-    gy = MOUTH - 3
-    for x, y in pts:
-        if y == gy:
-            return x, gy - lift
-    x, y = pts[min(3, len(pts) - 1)]
-    return x, y - lift
 
 
 def frames():
@@ -293,13 +266,14 @@ def frames():
 
     add(SHADOW + mouse('look') + vase(), 900)
     for i, (name, bx, (hx, hy)) in enumerate(ARRANGEMENT):
-        # bring the flower up beside the vase, lower it into the neck, step back, admire
-        top = min(y for x, y, c in stem_and_head(name, bx, hx, hy))
-        room = max(2, min(6, top - TOP))
-        lifts = sorted({room, room * 2 // 3, room // 3, 0}, reverse=True)
-        for lift, ms in zip(lifts, (500, 180, 180, 300)):
-            gx, gy = grip_point(name, bx, hx, hy, lift)
-            add(SHADOW + mouse('focus') + base() + cells_to_rects(stem_and_head(name, bx, hx, hy, lift)) + arm(gx, gy), ms)
+        # it looks up, the flower drops in from above the window, lands in the neck with a bounce and a sparkle
+        spark = [(bx - 3, MOUTH - 1, 1, 1, GOLD), (bx + 3, MOUTH - 1, 1, 1, GOLD), (bx - 2, MOUTH - 3, 1, 1, GOLD),
+                 (bx + 2, MOUTH - 3, 1, 1, GOLD)]
+        add(SHADOW + mouse('up') + base(), 450)
+        fall = MOUTH - TOP + 2  # stem bottom just above the window
+        for lift, ms in ((fall, 60), (fall * 3 // 5, 60), (fall * 3 // 10, 60), (fall // 10, 60), (0, 110), (-1, 90), (0, 160)):
+            fx = spark if lift <= 0 else []
+            add(SHADOW + mouse('up' if lift > 0 else 'wow') + base() + cells_to_rects(stem_and_head(name, bx, hx, hy, lift)) + fx, ms)
         placed.append((name, bx, hx, hy))
         add(SHADOW + mouse('look') + base(), 500)
         add(SHADOW + mouse('happy', blush=(i == len(ARRANGEMENT) - 1)) + base(), 700 if i < len(ARRANGEMENT) - 1 else 2600)
