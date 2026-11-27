@@ -93,29 +93,62 @@ def emit(add):
 DY = 9  # no bed: drop the mouse to the ground line, soft shadow underneath
 
 
-def main(assets):
-    path = os.path.join(assets, 'mouse-sleeping.svg')
+def has_bed(g):
+    return any(c == CHEESE and y >= 18 for (x, y), c in g.items())
+
+
+def lying(g):
+    """Bed-less lying pose floating at the old height (mid-collapse)."""
+    pts = [p for p, c in g.items() if c != ZZZ]
+    xs = [x for x, y in pts]; ys = [y for x, y in pts]
+    return bool(pts) and max(ys) < 23 and max(xs) - min(xs) > 20 and max(ys) - min(ys) < 15
+
+
+def ground(g):
+    """Set a bed-less lying frame on the same ground line, with the same shadow."""
+    dy = 23 - max(y for (x, y), c in g.items() if c != ZZZ)
+    final = {}
+    for y, (a, b) in {24: (1, 28), 25: (4, 25)}.items():
+        for x in range(a, b + 1):
+            final[(x, y)] = SHADOW
+    final.update({(x, y + dy): c for (x, y), c in g.items()})
+    return final
+
+
+def cozy(g):
+    mouse = {p: c for p, c in g.items() if p[1] <= 14}  # drop the cheese bed and tail bits under the blanket
+    mouse.update(blanket(mouse))
+    mouse.update(nightcap())
+    final = {}
+    for y, (a, b) in {15: (1, 28), 16: (4, 25)}.items():
+        for x in range(a, b + 1):
+            final[(x, y + DY)] = SHADOW
+    final.update({(x, y + DY): c for (x, y), c in mouse.items()})
+    return final
+
+
+def process(path):
+    """Rewrite every lying-on-the-bed frame of an animation in the cozy style."""
     s = open(path, encoding='utf8').read()
     if '<!--cozy-->' in s:
-        print('already cozy')
+        print('already cozy:', os.path.basename(path))
         return
     heads = list(re.finditer(r'<g class="f\d+">', s))
     pieces, last = [], 0
     for i, m in enumerate(heads):
         end = heads[i + 1].start() if i + 1 < len(heads) else s.rindex('</svg>')
         g = cells(parse_rects(s[m.end():end]))
-        mouse = {p: c for p, c in g.items() if p[1] <= 14}  # drop the cheese bed and tail bits under the blanket
-        mouse.update(blanket(mouse))
-        mouse.update(nightcap())
-        final = {}
-        for y, (a, b) in {15: (1, 28), 16: (4, 25)}.items():
-            for x in range(a, b + 1):
-                final[(x, y + DY)] = SHADOW
-        final.update({(x, y + DY): c for (x, y), c in mouse.items()})
-        pieces.append(s[last:m.end()] + emit(final) + '</g>')
-        last = end
+        if has_bed(g) or lying(g):
+            pieces.append(s[last:m.end()] + emit(cozy(g) if has_bed(g) else ground(g)) + '</g>')
+            last = end
     pieces.append(s[last:].replace('</svg>', '<!--cozy--></svg>'))
     open(path, 'w', encoding='utf8').write(''.join(pieces))
+
+
+def main(assets):
+    # sleeping is the loop; the last collapse frame and first wake frame are the same pose
+    for name in ('mouse-sleeping.svg', 'mouse-collapsing.svg', 'mouse-wake.svg'):
+        process(os.path.join(assets, name))
 
 
 if __name__ == '__main__':

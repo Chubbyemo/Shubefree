@@ -51,7 +51,7 @@ cd clawd-buddy; npm start
 python3 tools/make_tricks.py theme/chubby-mouse/assets
 ```
 
-睡觉的时候小老鼠戴着蓝色小睡帽、盖着奶酪被子，身下一层淡淡的阴影，是 [`tools/make_sleep.py`](tools/make_sleep.py) 加上去的（只对原图生效，重复运行会跳过）：
+睡觉的时候小老鼠戴着蓝色小睡帽、盖着奶酪被子，身下一层淡淡的阴影，躺倒和醒来动画里躺着的那几帧也一样，是 [`tools/make_sleep.py`](tools/make_sleep.py) 改出来的（只对原图生效，重复运行会跳过）：
 
 ```bash
 python3 tools/make_sleep.py theme/chubby-mouse/assets

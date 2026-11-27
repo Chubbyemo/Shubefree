@@ -155,6 +155,7 @@
     },
     "yawnDuration": 2700,
     "wakeDuration": 1500,
+    "collapseDuration": 2400,
     "deepSleepTimeout": 600000,
     "mouseIdleTimeout": 20000,
     "mouseSleepTimeout": 60000
