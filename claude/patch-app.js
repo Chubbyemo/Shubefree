@@ -50,7 +50,7 @@ function getSpeechWin() {
   }
 }
 
-// 小把戏：偷奶酪、横着走（自动随机触发 + 右键菜单）
+// 小把戏：偷奶酪、横着走、插花（自动随机触发 + 右键菜单）
 s = fs.readFileSync(main, "utf8");
 if (!s.includes('require("./tricks")')) {
   const a = "let _speechWin = null;\n";
@@ -78,7 +78,7 @@ function getTricks() {
 }
 ` + a);
     s = s.replace(b, b + "    getTricks().start();\n");
-    s = s.replace(c, c + "  playHeist: () => getTricks().heist(),\n  playCrab: () => getTricks().crab(),\n");
+    s = s.replace(c, c + "  playHeist: () => getTricks().heist(),\n  playCrab: () => getTricks().crab(),\n  playIkebana: () => getTricks().ikebana(),\n");
     s = s.replace('log: (m) => sessionLog(m) });', 'log: (m) => sessionLog(m), tricks: () => getTricks() });');
     fs.writeFileSync(main, s);
   } else {
@@ -90,7 +90,7 @@ let mn = fs.readFileSync(menu, "utf8");
 if (!mn.includes("playHeist")) {
   const anchor = '        click: () => ctx.teasePet("context-menu"),\n      },';
   if (mn.includes(anchor)) {
-    mn = mn.replace(anchor, anchor + '\n      { label: "偷块奶酪", click: () => ctx.playHeist && ctx.playHeist() },\n      { label: "横着走", click: () => ctx.playCrab && ctx.playCrab() },');
+    mn = mn.replace(anchor, anchor + '\n      { label: "偷块奶酪", click: () => ctx.playHeist && ctx.playHeist() },\n      { label: "横着走", click: () => ctx.playCrab && ctx.playCrab() },\n      { label: "插个花", click: () => ctx.playIkebana && ctx.playIkebana() },');
     fs.writeFileSync(menu, mn);
   }
 }
@@ -116,6 +116,19 @@ if (!hr.includes("mix the celebration")) {
       }`;
   if (hr.includes(old)) { hr = hr.replace(old, neu); fs.writeFileSync(hitR, hr); }
   else console.error("hit-renderer.js 结构变了，单击表情没改上");
+}
+
+// 空闲动画按 weight 加权抽（插花出现得多一点）
+const tick = path.join(dir, "src", "tick.js");
+let tk = fs.readFileSync(tick, "utf8");
+if (!tk.includes("a.weight")) {
+  const a = "  IDLE_ANIMS = (theme.idleAnimations || []).map(a => ({ svg: a.file, duration: a.duration }));";
+  const c = "        const pick = IDLE_ANIMS[Math.floor(Math.random() * IDLE_ANIMS.length)];";
+  if (tk.includes(a) && tk.includes(c)) {
+    tk = tk.replace(a, "  IDLE_ANIMS = (theme.idleAnimations || []).map(a => ({ svg: a.file, duration: a.duration, weight: a.weight > 0 ? a.weight : 1 }));");
+    tk = tk.replace(c, "        let roll = Math.random() * IDLE_ANIMS.reduce((n, a) => n + a.weight, 0);\n        const pick = IDLE_ANIMS.find(a => (roll -= a.weight) < 0) || IDLE_ANIMS[0];");
+    fs.writeFileSync(tick, tk);
+  } else console.error("tick.js 结构变了，插花权重没改上");
 }
 
 let p = fs.readFileSync(preload, "utf8");

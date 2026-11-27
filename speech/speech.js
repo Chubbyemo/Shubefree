@@ -200,6 +200,17 @@
     "我什么都没拿，你看错了",
     "偷奶酪的事，你就当没看见",
   ];
+  LINES.ikebana = [
+    "今天的花材：石蒜、嘉兰、亚百合，鼠鼠很有品味",
+    "先插飞燕草，把主线立起来",
+    "石蒜要斜着插，才有往外探的感觉",
+    "嘉兰百合像一小团火，放右边",
+    "帝王花压低一点，当主花",
+    "最后垂一枝尤加利，收尾",
+    "插花讲究留白，所以你的 bug 我也留着了",
+    "这瓶花叫《收敛之前》",
+    "无聊的时候，鼠鼠就插花",
+  ];
   LINES.crab = [
     "横着走，我是螃蟹鼠",
     "让一让让一让，螃蟹过马路",
@@ -300,6 +311,7 @@
     const f = String(svg || "");
     if (/heist/.test(f)) return "heist";
     if (/crab/.test(f)) return "crab";
+    if (/ikebana/.test(f)) return "ikebana";
     if (s === "idle") return null;
     if (LINES[s]) return s;
     if (/build/.test(s + f)) return "building";
@@ -319,10 +331,10 @@
   api.onStateChange((state, svg) => {
     const prev = currentState;
     currentState = state;
-    if (state === prev && !/heist|crab/.test(String(svg || ""))) return;
+    if (state === prev && !/heist|crab|ikebana/.test(String(svg || ""))) return;
     const key = keyForState(state, svg);
     if (!key) return;
-    const sure = key === "waking" || key === "error" || key === "notification" || key === "heist" || key === "crab";
+    const sure = key === "waking" || key === "error" || key === "notification" || key === "heist" || key === "crab" || key === "ikebana";
     if (sure || Math.random() < STATE_CHANCE) say(key);
   });
 

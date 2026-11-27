@@ -134,6 +134,11 @@
     {
       "file": "mouse-idle-super.svg",
       "duration": 5000
+    },
+    {
+      "file": "mouse-idle-ikebana.svg",
+      "duration": 18500,
+      "weight": 3
     }
   ],
   "timings": {

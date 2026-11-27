@@ -3,6 +3,8 @@
 const HEIST_SVG = "mouse-trick-heist.svg";
 const HEIST_MS = 13300;
 const CRAB_SVG = "mouse-trick-crab.svg";
+const IKEBANA_SVG = "mouse-idle-ikebana.svg";
+const IKEBANA_MS = 18500;
 const CRAB_SPEED = 160;        // DIP per second, a brisk sideways scuttle
 const MIN_GAP_MS = 3 * 60 * 1000;
 const MAX_GAP_MS = 7 * 60 * 1000;
@@ -33,6 +35,14 @@ module.exports = function createTricks(ctx) {
     busy = true;
     show(HEIST_SVG);
     setTimeout(finish, HEIST_MS);
+    return true;
+  }
+
+  function ikebana() {
+    if (!canPlay()) return false;
+    busy = true;
+    show(IKEBANA_SVG);
+    setTimeout(finish, IKEBANA_MS);
     return true;
   }
 
@@ -69,7 +79,7 @@ module.exports = function createTricks(ctx) {
     const delay = MIN_GAP_MS + Math.random() * (MAX_GAP_MS - MIN_GAP_MS);
     timer = setTimeout(() => {
       if (!canPlay()) { schedule(); return; }
-      (Math.random() < 0.5 ? heist : crab)();
+      [heist, crab, ikebana][Math.floor(Math.random() * 3)]();
       if (!busy) schedule();
     }, delay);
   }
@@ -84,5 +94,6 @@ module.exports = function createTricks(ctx) {
     start() { started = true; schedule(); },
     heist,
     crab,
+    ikebana,
   };
 };

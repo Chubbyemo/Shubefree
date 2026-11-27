@@ -42,13 +42,20 @@ cd clawd-buddy; npm start
 
 - **偷奶酪**：脚下开个洞钻下去，从旁边的洞探头，踮脚走过去叼走奶酪，飞快跑回洞里，最后抱着奶酪从原地冒出来。
 - **横着走**：像螃蟹一样举着小爪子、迈着大脚，从屏幕一边横着走到另一边（在左半边就往右走，反之往左）。
+- **插花**：搬出一只青瓷瓶，一根一根往里插：飞燕草、石蒜、嘉兰百合、亚百合、帝王花，最后垂一枝尤加利。每插一根退后看一眼，插完会害羞。无聊（20 秒没动鼠标）时抽到它的机会比别的空闲动画大。
 
-想马上看：右键小老鼠 → 「偷块奶酪」或「横着走」。睡着、Mini 模式、勿扰模式、正在拖动的时候不会表演。
+想马上看：右键小老鼠 → 「偷块奶酪」「横着走」或「插个花」。睡着、Mini 模式、勿扰模式、正在拖动的时候不会表演。
 
 动画是用 [`tools/make_tricks.py`](tools/make_tricks.py) 从原有的帧拼出来的，改完重新生成：
 
 ```bash
 python3 tools/make_tricks.py theme/chubby-mouse/assets
+```
+
+插花是 [`tools/make_ikebana.py`](tools/make_ikebana.py) 画的，每种花都是脚本里的一小段像素图，想换花材改那里：
+
+```bash
+python3 tools/make_ikebana.py theme/chubby-mouse/assets
 ```
 
 睡觉的时候小老鼠戴着蓝色小睡帽、盖着奶酪被子，身下一层淡淡的阴影，躺倒和醒来动画里躺着的那几帧也一样，是 [`tools/make_sleep.py`](tools/make_sleep.py) 改出来的（只对原图生效，重复运行会跳过）：
@@ -100,7 +107,7 @@ theme/chubby-mouse/   像素主题（theme.json + SVG 动画）
 speech/speech.js      说话气泡逻辑和台词
 speech/speech.css     气泡样式
 bubble/               独立的气泡窗口，浮在小老鼠头顶，不挡任何动画
-tricks/tricks.js      小把戏的调度（偷奶酪、横着走）
+tricks/tricks.js      小把戏的调度（偷奶酪、横着走、插花）
 tools/                生成小把戏动画的脚本
 claude/               连 Claude Code 用的桥、hook 脚本和配置脚本
 install.sh            Linux / macOS 安装脚本
