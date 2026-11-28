@@ -130,13 +130,17 @@ def frame_grids(path):
 
 
 def render(path, size=240):
-    seq = frame_grids(path)
+    return crop(frame_grids(path), size)
+
+
+def crop(seq, size=240):
+    """[(pixel dict, ms)] -> [[RGBA image, ms]] framed on a shared square, integer scale."""
     grids = {i: g for i, (g, _) in enumerate(seq)}
     tl = [(i, ms) for i, (_, ms) in enumerate(seq)]
     xs = [x for g in grids.values() for x, y in g]
     ys = [y for g in grids.values() for x, y in g]
     w, h = max(xs) - min(xs) + 1, max(ys) - min(ys) + 1
-    side = next(d for d in (30, 40, 48, 60, 80, 120, 240) if d >= max(w, h) + 2)
+    side = next(d for d in (30, 40, 48, 60, 80, 120, 240) if d >= max(w, h) + 1)
     k = size // side
     x0 = min(xs) - (side - w) // 2
     y0 = min(ys) - (side - h) // 2

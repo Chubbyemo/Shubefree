@@ -74,6 +74,12 @@ python3 tools/make_wechat.py theme/chubby-mouse/assets 输出目录
 
 只想把某几个动画转成 GIF 用 [`tools/make_gif.py`](tools/make_gif.py)。
 
+[`tools/make_more.py`](tools/make_more.py) 是另外手画的几张：球身小老鼠滚来滚去、黑眼圈缩到桌子底下、戴眼镜教机器人，还有一张草地晒太阳的 1920×1080 插画：
+
+```bash
+python3 tools/make_more.py 输出目录
+```
+
 
 ## 连上 Claude Code
 
